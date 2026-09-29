@@ -1,5 +1,4 @@
 using GestaoPedidos.Domain.Clientes;
-using GestaoPedidos.Domain.ValueObjects;
 using GestaoPedidos.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +12,10 @@ public class ClienteRepository(GestaoPedidosDbContext context) : IClienteReposit
     public async Task<IReadOnlyList<Cliente>> ListarAsync(CancellationToken cancellationToken = default) =>
         await context.Clientes.AsNoTracking().OrderBy(c => c.Nome).ToListAsync(cancellationToken);
 
-    public Task<bool> ExisteComEmailAsync(Email email, Guid? ignorarClienteId = null, CancellationToken cancellationToken = default) =>
-        context.Clientes.AnyAsync(c => c.Email == email && c.Id != ignorarClienteId, cancellationToken);
+    public Task<bool> ExisteOutroComMesmoEmailOuDocumentoAsync(Cliente cliente, CancellationToken cancellationToken = default) =>
+        context.Clientes.AnyAsync(
+            c => c.Id != cliente.Id && (c.Email == cliente.Email || c.Documento == cliente.Documento),
+            cancellationToken);
 
     public void Adicionar(Cliente cliente) => context.Clientes.Add(cliente);
 }

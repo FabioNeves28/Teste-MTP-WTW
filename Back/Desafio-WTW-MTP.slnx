@@ -6,6 +6,7 @@
     <Project Path="src/GestaoPedidos.Infrastructure/GestaoPedidos.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/GestaoPedidos.Application.Tests/GestaoPedidos.Application.Tests.csproj" />
     <Project Path="tests/GestaoPedidos.Domain.Tests/GestaoPedidos.Domain.Tests.csproj" />
   </Folder>
 </Solution>
