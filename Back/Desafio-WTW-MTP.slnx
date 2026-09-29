@@ -1,3 +1,11 @@
 <Solution>
-  <Project Path="Desafio-WTW-MTP/Desafio-WTW-MTP.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/GestaoPedidos.Api/GestaoPedidos.Api.csproj" />
+    <Project Path="src/GestaoPedidos.Application/GestaoPedidos.Application.csproj" />
+    <Project Path="src/GestaoPedidos.Domain/GestaoPedidos.Domain.csproj" />
+    <Project Path="src/GestaoPedidos.Infrastructure/GestaoPedidos.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GestaoPedidos.Domain.Tests/GestaoPedidos.Domain.Tests.csproj" />
+  </Folder>
 </Solution>

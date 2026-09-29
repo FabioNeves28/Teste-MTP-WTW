@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\GestaoPedidos.Domain\GestaoPedidos.Domain.csproj" />
+  </ItemGroup>
+</Project>
