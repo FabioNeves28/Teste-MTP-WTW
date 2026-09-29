@@ -9,7 +9,6 @@ public class ItemPedido : Entity
     public Guid PedidoId { get; private set; }
     public Guid ProdutoId { get; private set; }
 
-    // Copiados no momento do pedido para que mudanças no cadastro não alterem pedidos já feitos.
     public string NomeProduto { get; private set; } = null!;
     public Money PrecoUnitario { get; private set; } = null!;
     public int Quantidade { get; private set; }

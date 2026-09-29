@@ -2,4 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GestaoPedidos.Domain\GestaoPedidos.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
+  </ItemGroup>
 </Project>
