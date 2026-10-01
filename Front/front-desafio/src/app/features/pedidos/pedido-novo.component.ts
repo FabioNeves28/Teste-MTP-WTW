@@ -49,13 +49,25 @@ export class PedidoNovoComponent {
     const { produtoId, quantidade } = this.novoItem.getRawValue();
     const produto = this.produtos().find((p) => p.id === produtoId);
 
-    if (this.novoItem.invalid || !produto) {
+    if (this.form.invalid || this.novoItem.invalid || !produto) {
+      this.form.markAllAsTouched();
       this.novoItem.markAllAsTouched();
       return;
     }
 
+    const existente = this.itens().find((i) => i.produto.id === produtoId);
+    const quantidadeTotal = (existente?.quantidade ?? 0) + quantidade;
+
+    if (quantidadeTotal > produto.quantidadeEstoque) {
+      const disponivel = produto.quantidadeEstoque - (existente?.quantidade ?? 0);
+      this.novoItem.controls.quantidade.setErrors({
+        estoque: `Máximo disponível: ${disponivel}.`,
+      });
+      this.novoItem.controls.quantidade.markAsTouched();
+      return;
+    }
+
     this.itens.update((itens) => {
-      const existente = itens.find((i) => i.produto.id === produtoId);
       return existente
         ? itens.map((i) => (i === existente ? { ...i, quantidade: i.quantidade + quantidade } : i))
         : [...itens, { produto, quantidade }];
@@ -69,9 +81,13 @@ export class PedidoNovoComponent {
   }
 
   salvar() {
-    if (this.form.invalid || this.itens().length === 0) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.toast.erro('Selecione o cliente e adicione ao menos um item.');
+      return;
+    }
+
+    if (this.itens().length === 0) {
+      this.toast.erro('Adicione ao menos um item ao pedido.');
       return;
     }
 

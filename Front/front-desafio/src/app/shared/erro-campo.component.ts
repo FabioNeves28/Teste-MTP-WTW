@@ -1,26 +1,43 @@
-import { Component, input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { Component, computed, input } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { map, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-erro-campo',
   template: `
-    @if (controle().invalid && controle().touched) {
-      <div class="invalid-feedback d-block">{{ mensagem() }}</div>
+    @if (mensagem(); as mensagem) {
+      <div class="invalid-feedback d-block">{{ mensagem }}</div>
     }
   `,
 })
 export class ErroCampoComponent {
   readonly controle = input.required<AbstractControl>();
+  readonly mensagemFormato = input('Formato inválido.');
 
-  protected mensagem(): string {
-    const erros = this.controle().errors ?? {};
+  private readonly estado = toSignal(
+    toObservable(this.controle).pipe(
+      switchMap((controle) =>
+        controle.events.pipe(
+          startWith(null),
+          map(() => ({ visivel: controle.invalid && controle.touched, erros: controle.errors })),
+        ),
+      ),
+    ),
+  );
 
-    if (erros['servidor']) return erros['servidor'];
-    if (erros['required']) return 'Campo obrigatório.';
-    if (erros['email']) return 'E-mail inválido.';
-    if (erros['min']) return `Valor mínimo: ${erros['min'].min}.`;
-    if (erros['maxlength']) return `Máximo de ${erros['maxlength'].requiredLength} caracteres.`;
-    if (erros['pattern']) return 'Formato inválido.';
-    return 'Valor inválido.';
-  }
+  protected readonly mensagem = computed(() => {
+    const estado = this.estado();
+    return estado?.visivel ? traduzir(estado.erros ?? {}, this.mensagemFormato()) : null;
+  });
+}
+
+function traduzir(erros: ValidationErrors, mensagemFormato: string): string {
+  if (erros['servidor']) return erros['servidor'];
+  if (erros['estoque']) return erros['estoque'];
+  if (erros['required']) return 'Campo obrigatório.';
+  if (erros['min']) return `Valor mínimo: ${erros['min'].min}.`;
+  if (erros['maxlength']) return `Máximo de ${erros['maxlength'].requiredLength} caracteres.`;
+  if (erros['pattern']) return mensagemFormato;
+  return 'Valor inválido.';
 }

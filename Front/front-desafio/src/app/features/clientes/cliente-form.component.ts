@@ -20,7 +20,7 @@ export class ClienteFormComponent implements OnInit {
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     nome: ['', [Validators.required, Validators.maxLength(150)]],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)]],
     documento: ['', [Validators.required, Validators.pattern(/^(\D*\d){11}(\D*\d{3})?\D*$/)]],
   });
 
