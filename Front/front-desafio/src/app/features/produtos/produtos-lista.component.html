@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h4 mb-0">Produtos</h2>
+  <a class="btn btn-primary" routerLink="novo">Novo produto</a>
+</div>
+
+<table class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th class="text-end">Preço</th>
+      <th class="text-end">Estoque</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (produto of produtos(); track produto.id) {
+      <tr>
+        <td>{{ produto.nome }}</td>
+        <td class="text-muted">{{ produto.descricao }}</td>
+        <td class="text-end">{{ produto.preco | moeda }}</td>
+        <td class="text-end" [class.text-danger]="produto.quantidadeEstoque === 0">
+          {{ produto.quantidadeEstoque }}
+        </td>
+        <td class="text-end">
+          <a class="btn btn-sm btn-outline-secondary" [routerLink]="produto.id">Editar</a>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="5" class="text-center text-muted">Nenhum produto cadastrado.</td>
+      </tr>
+    }
+  </tbody>
+</table>

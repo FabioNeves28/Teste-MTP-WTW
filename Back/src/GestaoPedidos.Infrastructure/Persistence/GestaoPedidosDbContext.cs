@@ -20,6 +20,9 @@ public class GestaoPedidosDbContext(
         return await base.SaveChangesAsync(cancellationToken);
     }
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) =>
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GestaoPedidosDbContext).Assembly);
 }
